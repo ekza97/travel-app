@@ -39,14 +39,16 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="card-footer d-flex justify-content-between">
-                                <button type="reset" class="btn btn-default" id="cancelPermission" tabindex="3"><i
-                                        class="bi bi-x-circle"></i>
-                                    Batal</button>
-                                <button type="submit" class="btn btn-primary" id="btnSave" tabindex="2"><i
-                                        class="bi bi-save"></i>
-                                    Simpan</button>
-                            </div>
+                            @can('create permission')
+                                <div class="card-footer d-flex justify-content-between">
+                                    <button type="reset" class="btn btn-default" id="cancelPermission" tabindex="3"><i
+                                            class="bi bi-x-circle"></i>
+                                        Batal</button>
+                                    <button type="submit" class="btn btn-primary" id="btnSave" tabindex="2"><i
+                                            class="bi bi-save"></i>
+                                        Simpan</button>
+                                </div>
+                            @endcan
                         </form>
                     </div>
                     <!--/ Form Permission Modal -->

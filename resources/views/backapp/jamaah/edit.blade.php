@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@can('form registration')
+@can('edit jamaah')
 
     @section('content')
         <div class="page-heading">

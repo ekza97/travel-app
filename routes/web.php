@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\BackApp\CoverLetterController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BackApp\RoleController;
@@ -10,6 +11,7 @@ use App\Http\Controllers\BackApp\SuratKeluarController;
 use App\Http\Controllers\BackApp\DataMaster\SuratController;
 use App\Http\Controllers\BackApp\JamaahController;
 use App\Http\Controllers\BackApp\JamaahDocumentController;
+use App\Http\Controllers\BackApp\LaporanController;
 use App\Http\Controllers\BackApp\MasterData\AgentController;
 use App\Http\Controllers\BackApp\MasterData\AirplaneController;
 use App\Http\Controllers\BackApp\MasterData\CategoryController;
@@ -51,19 +53,27 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('packets', PacketController::class)->except(['show']);
     Route::resource('schedules', ScheduleController::class)->except(['show']);
     //Jamaah Menu
-    Route::resource('jamaahs', JamaahController::class)->except(['create','show']);
-    Route::get('/form-registration', [JamaahController::class,'create'])->name('form-registration');
     Route::get('/jamaahs/table', [JamaahController::class,'table'])->name('jamaahs.table');
-    Route::get('/jamaahs/{id}/documents', [JamaahController::class,'document'])->name('jamaahs.documents');
-    Route::post('/jamaahs/document/store', [JamaahController::class, 'document_store'])->name('jamaahs.documents.store');
+    Route::post('/jamaahs/export-excel', [JamaahController::class, 'exportExcel'])->name('jamaahs.export_excel');
+    Route::resource('jamaahs', JamaahController::class)->except(['create']);
+    Route::get('/form-registration', [JamaahController::class,'create'])->name('form-registration');
     //Dokumen Jamaah Menu
     Route::resource('jamaah-documents', JamaahDocumentController::class)->except(['create','show','edit','update']);
     Route::get('/jamaah-documents/table', [JamaahDocumentController::class,'table'])->name('jamaah-documents.table');
     Route::get('/jamaah-documents/{id}/download', [JamaahDocumentController::class,'download'])->name('jamaah-documents.download');
-
+    //Pembayaran Menu
     Route::resource('payments', PaymentController::class)->except(['create','show','edit','update']);
     Route::get('/payments/table', [PaymentController::class,'table'])->name('payments.table');
     Route::get('/payments/{id}/download', [PaymentController::class,'download'])->name('payments.download');
+    //Surat Pengantar Menu
+    Route::resource('cover-letters', CoverLetterController::class)->except(['create','show','edit','update']);
+    Route::get('/cover-letters/table', [CoverLetterController::class,'table'])->name('cover-letters.table');
+    Route::get('/cover-letters/{id}/cetak', [CoverLetterController::class,'cetak'])->name('cover-letters.cetak');
+    //Laporan Menu
+    Route::controller(LaporanController::class)->group(function () {
+        Route::get('/report', 'lapJamaah')->name('reports.jamaah');
+        // Route::post('/orders', 'store');
+    });
 
     //get jenis surat select2
     Route::post('selectjenissurat', [SuratMasukController::class,'selectJenisSurat'])->name('selectjenissurat');

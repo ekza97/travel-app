@@ -19,11 +19,12 @@
             <section class="section">
                 <!-- Role Table -->
                 <div class="card border-1 border-primary">
-                    <div class="card-header border-bottom p-3">
-                        {{-- <h4 class="card-title text-white">Daftar Pengguna</h4> --}}
-                        <a href="#" class="btn btn-sm btn-primary" onclick="addData()"><i class="bi bi-plus-circle"></i>
-                            Tambah</a>
-                    </div>
+                    @can('create role')
+                        <div class="card-header border-bottom p-3">
+                            <a href="#" class="btn btn-sm btn-primary" onclick="addData()"><i class="bi bi-plus-circle"></i>
+                                Tambah</a>
+                        </div>
+                    @endcan
                     <div class="card-body table-responsive p-4">
                         {!! $dataTable->table() !!}
 

@@ -2,12 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Charts\SuratChart;
+use App\Charts\JamaahChart;
 use App\Models\Agent;
+use App\Models\Jamaah;
 use App\Models\Packet;
 use App\Models\User;
-use App\Models\SuratMasuk;
-use App\Models\SuratKeluar;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 
@@ -28,19 +27,21 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function index(SuratChart $suratChart)
+    public function index(JamaahChart $jamaahChart)
     {
         $dateNow = Carbon::now()->translatedFormat('l, d F Y');
-        $t_suratMasuk = Packet::count();
-        $t_suratKeluar = Agent::count();
+        $t_packet = Packet::count();
+        $t_agent = Agent::count();
+        $t_jamaah = Jamaah::count();
         $t_users = User::count();
         return view('backapp.home',[
             'dateNow'=>$dateNow,
-            't_suratMasuk'=>$t_suratMasuk,
-            't_suratKeluar'=>$t_suratKeluar,
+            't_packet'=>$t_packet,
+            't_agent'=>$t_agent,
+            't_jamaah'=>$t_jamaah,
             't_users'=>$t_users,
-            'pieChart'=>$suratChart->buildPie(),
-            'radialChart'=>$suratChart->buildRadial()
+            'pieChart'=>$jamaahChart->buildPie(),
+            'radialChart'=>$jamaahChart->buildRadial()
         ]);
     }
 }

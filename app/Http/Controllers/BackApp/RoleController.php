@@ -42,6 +42,8 @@ class RoleController extends Controller
             'jamaah'           => 'Modul Jamaah',
             'file'           => 'Modul Dokumen Jamaah',
             'payment'           => 'Modul Pembayaran Jamaah',
+            'cover-letter'           => 'Modul Surat Pengantar',
+            'report'           => 'Modul Laporan',
             'permission'            => 'Modul Permission',
             'role'                  => 'Modul Role',
             'user'                  => 'Modul Pengguna',

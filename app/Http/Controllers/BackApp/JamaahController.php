@@ -7,13 +7,15 @@ use App\Models\Agent;
 use App\Models\Jamaah;
 use App\Helpers\Helper;
 use App\Models\Category;
+use App\Models\Document;
 use App\Models\Schedule;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
-use App\Models\Document;
+use App\Exports\JamaahExport;
 use App\Models\JamaahHasDocument;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
+use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Crypt;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -39,7 +41,6 @@ class JamaahController extends Controller
         $categories = Category::all();
         $agents = Agent::all();
         $schedules = Schedule::all();
-        // return $dataTable->render('backapp.jamaah.index',compact('categories','agents','schedules'));
         return view('backapp.jamaah.index',compact('categories','agents','schedules'));
     }
 
@@ -73,16 +74,10 @@ class JamaahController extends Controller
                         })
                         ->addColumn('action', function($row){
                             $action = '';
-                            if(Gate::allows('edit jamaah')){
-                                $action .= '<a href="' . route("jamaahs.edit", Crypt::encrypt($row->id)) . '" class="btn btn-sm btn-icon btn-outline-info me-1" data-bs-toggle="tooltip"
+                            if(Gate::allows('show jamaah')){
+                                $action .= '<a href="' . route("jamaahs.show", Crypt::encrypt($row->id)) . '" class="btn btn-sm btn-icon btn-outline-info me-1" data-bs-toggle="tooltip"
                                     data-bs-placement="top" title="Detail Data">
                                     <i class="bi bi-eye"></i>
-                                </a>';
-                            }
-                            if(Gate::allows('dokumen jamaah')){
-                                $action .= '<a href="' . route("jamaahs.documents", Crypt::encrypt($row->id)) . '" class="btn btn-sm btn-icon btn-outline-secondary me-1" data-bs-toggle="tooltip"
-                                    data-bs-placement="top" title="Unggah Dokumen">
-                                    <i class="bi bi-upload"></i>
                                 </a>';
                             }
                             if(Gate::allows('edit jamaah')){
@@ -171,7 +166,12 @@ class JamaahController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $id = Crypt::decrypt($id);
+        $categories = Category::all();
+        $agents = Agent::all();
+        $schedules = Schedule::all();
+        $data = Jamaah::find($id);
+        return view('backapp.jamaah.show',compact('categories','agents','schedules','data'));
     }
 
     /**
@@ -257,35 +257,8 @@ class JamaahController extends Controller
         }
     }
 
-    public function document(string $id)
+    public function exportExcel(Request $request)
     {
-        $id = Crypt::decrypt($id);
-        $jamaah = Jamaah::find($id);
-        $doc = Document::all();
-        return view('backapp.jamaah.document',compact('jamaah','doc'));
-    }
-
-    public function document_store(Request $request)
-    {
-        try {
-            $request->validate([
-                'jamaah_id' => 'required',
-                'document_id' => 'required',
-                'file' => 'file|max:2048|mimes:pdf'
-            ]);
-
-            JamaahHasDocument::create([
-                'jamaah_id' => $request->jamaah_id,
-                'document_id' => $request->document_id,
-                'file' => $request->file('file')->store('public/jamaah_document'),
-                'created_by' => Auth::id()
-            ]);
-
-            return response()->json([
-                'status' => true, 'message' => 'Berhasil tersimpan'
-            ]);
-        } catch (Exception $e) {
-            return $e->getMessage();
-        }
+        return Excel::download(new JamaahExport($request), 'jamaah.xlsx');
     }
 }

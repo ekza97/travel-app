@@ -30,6 +30,16 @@ class Jamaah extends Model
     ];
 
     /**
+     * Get the categories that owns the Jamaah
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function categories()
+    {
+        return $this->belongsTo(Category::class, 'category_id', 'id');
+    }
+
+    /**
      * Get the agents that owns the Jamaah
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

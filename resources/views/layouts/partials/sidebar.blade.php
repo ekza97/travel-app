@@ -138,12 +138,20 @@
                         </a>
                     </li>
                 @endcan
-                <li class="sidebar-title">Laporan</li>
-                @can('read payment')
-                    <li class="sidebar-item {{ request()->is('payments*') ? 'active' : '' }}">
-                        <a href="{{ route('payments.index') }}" class="sidebar-link">
-                            <i class="bi bi-calendar-event-fill"></i>
-                            <span>Pembayaran Jamaah</span>
+                @can('read cover-letter')
+                    <li class="sidebar-item {{ request()->is('cover-letters') ? 'active' : '' }}">
+                        <a href="{{ route('cover-letters.index') }}" class="sidebar-link">
+                            <i class="bi bi-file-earmark-medical-fill"></i>
+                            <span>Surat Pengantar</span>
+                        </a>
+                    </li>
+                @endcan
+                @can('read report')
+                    <li class="sidebar-title">Laporan</li>
+                    <li class="sidebar-item {{ request()->is('reports*') ? 'active' : '' }}">
+                        <a href="{{ route('reports.jamaah') }}" class="sidebar-link">
+                            <i class="bi bi-people-fill"></i>
+                            <span>Laporan Jamaah</span>
                         </a>
                     </li>
                 @endcan
